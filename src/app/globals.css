@@ -1,15 +1,24 @@
 @import "tailwindcss";
 
+/* =========================
+   THEME TOKENS
+========================= */
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Luxury polish pack */
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 12px 40px rgba(0, 0, 0, 0.07);
+
+  /* Ink × Violet accents */
+  --violet-ink: 124, 58, 237;      /* violet-600 */
+  --violet-ink-soft: 167, 139, 250; /* violet-300 */
+
+  /* 上品な日本語寄りフォント（追加インストール不要） */
+  --hn-font: ui-sans-serif, system-ui, -apple-system, "Hiragino Sans",
+    "Hiragino Kaku Gothic ProN", "Yu Gothic", "YuGothic", "Noto Sans JP",
+    "Meiryo", sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,8 +28,138 @@
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Tailwind v4 の theme inline（残してOK） */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+/* =========================
+   LAYERS: base -> components -> utilities
+   ここが「全部上書きできる」肝
+========================= */
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: geometricPrecision;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--hn-font);
+    letter-spacing: 0.01em;
+  }
+
+  ::selection {
+    background: rgba(24, 24, 27, 0.12); /* zinc-900系の薄い選択色 */
+  }
+
+  /* ✅ ここが重要：span を勝手に block にしない（保険）
+     何かの拡張や外部CSSが入っても “inline” に戻す */
+  span {
+    display: inline;
+  }
+}
+
+@layer components {
+  /* 見出しだけ少し締めて “編集デザイン” っぽく */
+  .hn-title {
+    letter-spacing: -0.02em;
+  }
+
+  /* セクションの「呼吸」(縦余白) を統一 */
+  .hn-section {
+    padding-top: 2.75rem; /* 44px */
+    padding-bottom: 0;
+  }
+  @media (min-width: 640px) {
+    .hn-section {
+      padding-top: 3.25rem; /* 52px */
+    }
+  }
+
+  .hn-card {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .hn-card-strong {
+    box-shadow: var(--shadow-card);
+  }
+
+  .hn-violet-ring {
+    box-shadow:
+      0 0 0 1px rgba(var(--violet-ink), 0.25),
+      0 18px 60px rgba(var(--violet-ink), 0.12);
+  }
+
+  .hn-violet-glow {
+    background: radial-gradient(
+      600px circle at 30% 20%,
+      rgba(var(--violet-ink-soft), 0.18),
+      transparent 55%
+    );
+  }
+
+  /* A) 儀式ボタン（プレミアム専用） */
+  .hn-ritual-btn {
+    position: relative;
+    isolation: isolate;
+    transform: translateZ(0);
+  }
+  .hn-ritual-btn::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: 0.75rem; /* rounded-xl */
+    background: radial-gradient(
+        700px circle at 50% 0%,
+        rgba(var(--violet-ink-soft), 0.35),
+        transparent 55%
+      ),
+      linear-gradient(
+        90deg,
+        rgba(var(--violet-ink), 0.35),
+        rgba(255, 255, 255, 0.06),
+        rgba(var(--violet-ink), 0.35)
+      );
+    opacity: 0;
+    transition: opacity 200ms ease;
+    z-index: -1;
+  }
+  .hn-ritual-btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 0.75rem;
+    background: radial-gradient(
+      500px circle at 50% 120%,
+      rgba(255, 255, 255, 0.10),
+      transparent 55%
+    );
+    opacity: 0;
+    transition: opacity 200ms ease, transform 200ms ease;
+    transform: translateY(2px);
+    z-index: -1;
+  }
+  .hn-ritual-btn:hover::before,
+  .hn-ritual-btn:focus-visible::before {
+    opacity: 1;
+  }
+  .hn-ritual-btn:hover::after,
+  .hn-ritual-btn:focus-visible::after {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .hn-ritual-btn:active {
+    transform: scale(0.99);
+  }
+}
+
+@layer utilities {
+  /* ✅ ここも保険：CTAの矢印が絶対割れないユーティリティ（必要なら使う） */
+  .hn-no-break {
+    white-space: nowrap;
+  }
 }
