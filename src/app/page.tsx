@@ -76,7 +76,7 @@ function stepThumbSrc(step: string) {
     case "STEP 2":
       return "/images/returns/step2.jpg";
     case "STEP 3":
-      return "/images/returns/step3.jpg";
+      return "/images/returns/step3ver2.png";
     case "STEP 4":
       return "/images/returns/step4.jpg";
     case "STEP 5":
@@ -838,30 +838,18 @@ export default function Page() {
                               ※ ここから先は「利用」ではなく「維持」の領域です
                             </div>
 
-<a
-  href="https://buy.stripe.com/cNi9ASfr0eT4bdB6wj5gc07"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="hn-ritual-btn inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-medium"
->
-  結界側へ入る
-</a>
+                            <a
+                              href="https://buy.stripe.com/cNi9ASfr0eT4bdB6wj5gc07"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="hn-ritual-btn inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-medium text-zinc-950 hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60"
+                            >
+                              結界側へ入る
+                            </a>
                           </div>
                         </div>
                       )}
 
-                      {/* inner CTA legacy (optional) */}
-                      {r.step === "STEP 3" && r.innerCta && (
-                        <div className="mt-5 rounded-2xl border border-white/15 bg-white/5 p-4 text-sm text-zinc-100">
-                          <div className="font-semibold">{r.innerCtaHeading ?? "専用CTA"}</div>
-                          <div className="mt-2 flex items-center gap-2 whitespace-nowrap leading-none text-zinc-200">
-                            <span aria-hidden className="inline-block shrink-0 text-[12px] leading-none opacity-90">
-                              ▶
-                            </span>
-                            <span className="inline-block leading-none">{r.innerCta}</span>
-                          </div>
-                        </div>
-                      )}
 
                       {r.note && (
                         <p className={["mt-4 text-xs leading-relaxed", r.tone === "KEKKAI" ? "text-zinc-300" : "text-zinc-600"].join(" ")}>
