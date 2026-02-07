@@ -48,7 +48,7 @@ function toneShell(tone?: ReturnTone) {
     case "DEEP":
       return "bg-gradient-to-b from-zinc-50 to-zinc-100 border-zinc-200 text-zinc-900";
     case "KEKKAI":
-      return "bg-gradient-to-br from-zinc-950 via-violet-950/35 to-zinc-950 border-white/10 text-white";
+      return "bg-gradient-to-br from-zinc-950 via-violet-950/18 to-zinc-950 border-white/12 text-white";
     default:
       return "bg-white border-zinc-200 text-zinc-900";
   }
@@ -64,6 +64,44 @@ function toneThumb(tone?: ReturnTone) {
       return "bg-[radial-gradient(140px_circle_at_30%_25%,rgba(167,139,250,0.35)_0%,rgba(124,58,237,0.14)_45%,rgba(0,0,0,0)_72%),radial-gradient(260px_circle_at_80%_80%,rgba(255,255,255,0.10)_0%,rgba(0,0,0,0)_60%)]";
     default:
       return "bg-[radial-gradient(140px_circle_at_30%_25%,rgba(250,250,250,1)_0%,rgba(228,228,231,0.65)_45%,rgba(255,255,255,0)_75%),radial-gradient(260px_circle_at_78%_78%,rgba(161,161,170,0.25)_0%,rgba(255,255,255,0)_65%)]";
+  }
+}
+
+function stepThumbSrc(step: string) {
+  switch (step) {
+    case "STEP 0":
+      return "/images/returns/step0.jpg";
+    case "STEP 1":
+      return "/images/returns/step1.jpg";
+    case "STEP 2":
+      return "/images/returns/step2.jpg";
+    case "STEP 3":
+      return "/images/returns/step3.jpg";
+    case "STEP 4":
+      return "/images/returns/step4.jpg";
+    case "STEP 5":
+      return "/images/returns/step5.jpg";
+    default:
+      return "";
+  }
+}
+
+function stepThumbAlt(step: string) {
+  switch (step) {
+    case "STEP 0":
+      return "感謝の言霊";
+    case "STEP 1":
+      return "刻印と開門";
+    case "STEP 2":
+      return "共創と直会";
+    case "STEP 3":
+      return "結界庭守｜調律位";
+    case "STEP 4":
+      return "結界庭守｜記録位";
+    case "STEP 5":
+      return "結界庭守｜維持位";
+    default:
+      return "リターン画像";
   }
 }
 
@@ -382,16 +420,29 @@ export default function Page() {
               光庭 -HikariNiwa- プロジェクト
             </h1>
 
-            <div className="mt-5 space-y-2 text-zinc-800">
-              <p className="text-lg sm:text-xl">一人では、ただの点。</p>
-              <p className="text-lg sm:text-xl">あなたがいれば、大きな渦になる。</p>
-              <p className="text-lg sm:text-xl">僕の夢に、乗っかってくれませんか。</p>
-            </div>
+<div className="mt-5 space-y-4 text-zinc-800 whitespace-pre-line">
+
+  <p className="text-lg sm:text-xl">
+    光庭は、
+    訪れる度に、“内側の状態”が整い、
+    判断の質が変わり、
+    行動が自然と強くなっていく場所。
+  </p>
+
+  <p className="text-lg sm:text-xl">
+    努力で前に進むのではなく、
+    状態が上がることで、人生が前に進み出す。
+  </p>
+
+  <p className="text-lg sm:text-xl font-medium">
+    そんな完全会員制のプライベートスペースです。
+  </p>
+</div>
 
             <div className="mt-7 grid gap-3 rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-4 text-sm text-zinc-700 sm:grid-cols-3 sm:gap-4 sm:px-6">
               <div className="rounded-xl bg-white px-4 py-3">
                 <div className="text-xs font-semibold text-zinc-500">場所</div>
-                <div className="mt-1 font-medium">都内／完全予約制・会員制</div>
+                <div className="mt-1 font-medium">都内／完全会員制</div>
               </div>
               <div className="rounded-xl bg-white px-4 py-3">
                 <div className="text-xs font-semibold text-zinc-500">完成予定</div>
@@ -485,60 +536,115 @@ export default function Page() {
               storyReveal.shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
             ].join(" ")}
           >
-            {/* Story header visual */}
-            <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-950">
-              <div className="relative aspect-[16/7] w-full">
-                <Image
-                  src="/images/hikariniwa-about.jpg"
-                  alt="光庭 -HikariNiwa-"
-                  fill
-                  className="object-cover opacity-90"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
-                {/* Overlay text */}
-                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-7">
-                  <div className="text-[11px] font-semibold tracking-[0.18em] text-zinc-200">
-                    PURE ENERGY / INVITE-ONLY
+            {/* Catch */}
+            <div className="mt-8">
+              <div className="mx-auto max-w-3xl overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm">
+                <div className="bg-gradient-to-b from-zinc-50 to-white px-6 py-7 sm:px-8 sm:py-9">
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="h-8 w-1.5 rounded-full bg-zinc-900/80" aria-hidden />
+                    <div className="text-xs font-semibold tracking-[0.18em] text-zinc-500">INVITE-ONLY</div>
                   </div>
-                  <div className="mt-2 text-xl font-semibold text-white sm:text-2xl">
-                    純度100％のエネルギーを届ける場所
+
+                  <div className="mt-5 text-center space-y-2">
+                    <p className="text-lg sm:text-xl font-semibold tracking-tight text-zinc-900">一人では、ただの点。</p>
+                    <p className="text-lg sm:text-xl font-semibold tracking-tight text-zinc-900">あなたがいれば、大きな渦になる。</p>
+
+                    <div className="mx-auto my-4 h-px w-16 bg-zinc-200" aria-hidden />
+
+                    <p className="text-lg sm:text-xl font-medium tracking-tight text-zinc-900">これは寄付ではありません。</p>
+                    <p className="text-lg sm:text-xl font-medium tracking-tight text-zinc-900">「場」を共に創る人を探しています。</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Catch */}
-            <div className="mt-8 text-center">
-              <h2 className="text-2xl font-semibold leading-relaxed text-zinc-900 sm:text-3xl">
-                一人では、ただの点。<br />
-                あなたがいれば、大きな渦になる。
-              </h2>
-              <p className="mt-4 text-sm leading-relaxed text-zinc-600">
-                これは寄付ではありません。<br />
-                「場」を共に創る人を探しています。
-              </p>
-            </div>
-
             <div className="mt-10">
               <StoryFold />
             </div>
+          
           </div>
         </div>
+        
       </section>
+  {/* Philosophy band */}
+<section className="mt-10 bg-zinc-50">
+  <div className="mx-auto max-w-6xl px-4">
+    <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
+      {/* Header (bar style) */}
+      <div className="flex items-center gap-3">
+        <div className="h-8 w-1.5 rounded-full bg-zinc-900/80" />
+        <h2 className="text-base font-semibold tracking-tight text-zinc-900 sm:text-lg">
+          どう関わりたいかによって選べる、5つのステップ
+        </h2>
+      </div>
 
+      <div className="mt-4 space-y-4 text-sm sm:text-base leading-relaxed text-zinc-700">
+        <p>光庭は、ただ整える場所ではありません。</p>
+
+        <p>
+          内側が変わり、判断が変わり、行動が変わる。
+          その連鎖が起きたとき、人生は静かに、しかし確実に加速します。
+        </p>
+
+        <p>
+          だからこの場所では、
+          「どれだけ関わりたいか」を基準に、5つのステップを用意しました。
+        </p>
+
+        <p>
+          軽くエネルギーを添える人。<br />
+          名を刻み、場の始まりに立ち会う人。<br />
+          共に作り、維持し、守る側に回る人。
+        </p>
+
+        <p>
+          STEPが上がるほど、
+          受け取るものが増えるのではなく、
+          この場に“与える役割”が深くなっていきます。
+        </p>
+
+        <p className="font-medium text-zinc-900">
+          あなたは、どこから関わりますか？
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
       {/* Returns band */}
       <section id="returns" className="mt-10 bg-white">
         <div className="mx-auto max-w-6xl px-4 pb-16">
           <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <h2 className="text-lg font-semibold">リターン一覧（関係性の深さ順）</h2>
-                <p className="mt-1 text-sm text-zinc-600">
-                  STEPが進むほど深くなります。どこまで入るかを選んでください。
-                </p>
+            {/* Returns Gate */}
+            <div className="mt-10">
+              <div className="relative overflow-hidden rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
+                {/* Gate Accent */}
+                <div className="absolute left-0 top-6 h-16 w-1.5 rounded-r bg-violet-600" />
+
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between pl-4">
+                  <div className="space-y-2">
+                    <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">
+                      リターン一覧
+                      <span className="ml-2 text-base font-medium text-zinc-600">
+                        （関係性の深さ順）
+                      </span>
+                    </h2>
+
+                    <p className="text-base leading-relaxed text-zinc-700">
+                      STEPが進むほど、受け取るものが増えるのではありません。
+                      <br />
+                      <span className="font-medium text-zinc-900">この場に与える役割</span>
+                      が、静かに深くなっていきます。
+                    </p>
+
+                    <p className="text-base font-medium tracking-tight text-zinc-900">
+                      あなたは、どこから関わりますか？
+                    </p>
+                  </div>
+
+                  <div className="text-sm text-zinc-500">※ 価格・内容は微調整OK</div>
+                </div>
               </div>
-              <div className="text-sm text-zinc-500">※ 価格・内容は微調整OK</div>
             </div>
 
             <div className="mt-7 grid gap-5">
@@ -546,6 +652,8 @@ export default function Page() {
                 const isKekkai = r.badge === "KEKKAI";
                 const isPremium = !!r.premium;
                 const isStep3 = r.step === "STEP 3";
+                const isStep4 = r.step === "STEP 4";
+                const isStep5 = r.step === "STEP 5";
 
                 return (
                   <article
@@ -555,6 +663,8 @@ export default function Page() {
                       toneShell(r.tone),
                       isPremium ? "hn-violet-ring hn-card-strong" : "shadow-sm",
                       isStep3 ? "hn-ritual-step3" : "",
+                      isStep4 ? "hn-kekkai-step4" : "",
+                      isStep5 ? "hn-kekkai-step5" : "",
                     ].join(" ")}
                   >
                     {/* Base glow for KEKKAI */}
@@ -563,6 +673,16 @@ export default function Page() {
                         <div className="hn-violet-glow absolute inset-0" />
                         <div className="absolute inset-0 bg-gradient-to-br from-white/6 via-transparent to-transparent" />
                       </div>
+                    )}
+                    {/* STEP color cue: readable, minimal */}
+                    {(isStep3 || isStep4 || isStep5) && r.tone === "KEKKAI" && (
+                      <div
+                        className={[
+                          "pointer-events-none absolute left-0 top-8 h-16 w-1.5 rounded-r",
+                          isStep3 ? "bg-violet-300/70" : isStep4 ? "bg-indigo-300/70" : "bg-fuchsia-300/70",
+                        ].join(" ")}
+                        aria-hidden
+                      />
                     )}
 
                     {/* STEP3 only: aurora / sheen / vignette */}
@@ -583,12 +703,32 @@ export default function Page() {
                               "relative overflow-hidden rounded-2xl border",
                               r.tone === "KEKKAI" ? "border-white/15" : "border-zinc-200",
                               "h-20 w-28 sm:h-24 sm:w-36",
-                              toneThumb(r.tone),
+                              stepThumbSrc(r.step) ? "bg-zinc-900/5" : toneThumb(r.tone),
                               isStep3 ? "hn-ritual-thumb" : "",
                             ].join(" ")}
                             aria-hidden
                           >
+                            {stepThumbSrc(r.step) ? (
+                              <Image
+                                src={stepThumbSrc(r.step)}
+                                alt={stepThumbAlt(r.step)}
+                                fill
+                                className="object-cover"
+                                sizes="(min-width: 640px) 144px, 112px"
+                              />
+                            ) : null}
+
+                            {/* subtle grain */}
                             <div className="absolute inset-0 opacity-[0.14] mix-blend-overlay [background-image:radial-gradient(circle,rgba(0,0,0,0.45)_1px,transparent_1px)] [background-size:6px_6px]" />
+                            <div className={[
+                              "absolute inset-0",
+                              r.tone === "KEKKAI"
+                                ? "bg-gradient-to-t from-black/45 via-black/10 to-transparent"
+                                : "bg-gradient-to-t from-black/20 via-black/0 to-transparent",
+                            ].join(" ")}
+                            />
+
+                            {/* STEP3 sigil overlay */}
                             {isStep3 && (
                               <div className="pointer-events-none absolute inset-0">
                                 <div className="hn-ritual-sigil absolute inset-0 opacity-60" />
@@ -737,29 +877,25 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Final CTA */}
+      {/* Join the vortex (image band) */}
       <section className="bg-zinc-50">
-        <div className="mx-auto max-w-6xl px-4 pb-20">
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h2 className="text-lg font-semibold">この渦に参加する</h2>
-                <p className="mt-2 text-sm leading-relaxed text-zinc-700">
-                  これは寄付ではありません。みんなで城を作る、創設の儀式です。
-                  参加は招待制。興味があれば、まずは一言ください。
-                </p>
-              </div>
-
-              <a
-                href="#returns"
-                className="inline-flex items-center justify-center rounded-2xl bg-zinc-900 px-6 py-3 text-sm font-semibold text-white hover:bg-zinc-800"
-              >
-                リターンを見る
-              </a>
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm">
+          
+            <div className="relative w-full">
+              <Image
+                src="/images/message.jpg"
+                alt="この渦に参加する"
+                width={2400}
+                height={1350}
+                className="h-auto w-full object-cover"
+              />
             </div>
           </div>
         </div>
       </section>
+
+     
 
       <footer className="border-t border-zinc-200 bg-white">
         <div className="mx-auto max-w-6xl px-4 py-10 text-xs text-zinc-500">
@@ -769,6 +905,11 @@ export default function Page() {
 
       {/* STEP3 “儀式感” CSS（ページ内完結） */}
       <style jsx global>{`
+        .hn-card-strong {
+          box-shadow:
+            0 0 0 1px rgba(167, 139, 250, 0.22),
+            0 28px 70px rgba(0, 0, 0, 0.6);
+        }
         @media (prefers-reduced-motion: reduce) {
           .hn-ritual-aurora,
           .hn-ritual-sheen,
@@ -781,8 +922,20 @@ export default function Page() {
         }
 
         .hn-ritual-step3 {
-          box-shadow: 0 0 0 1px rgba(167, 139, 250, 0.25),
-            0 30px 80px rgba(0, 0, 0, 0.55);
+          box-shadow:
+            0 0 0 1px rgba(167, 139, 250, 0.22),
+            0 22px 55px rgba(0, 0, 0, 0.55);
+        }
+
+        .hn-kekkai-step4 {
+          box-shadow:
+            0 0 0 1px rgba(129, 140, 248, 0.14),
+            0 18px 46px rgba(0, 0, 0, 0.55);
+        }
+        .hn-kekkai-step5 {
+          box-shadow:
+            0 0 0 1px rgba(232, 121, 249, 0.12),
+            0 18px 46px rgba(0, 0, 0, 0.60);
         }
 
         .hn-ritual-aurora {
@@ -801,15 +954,16 @@ export default function Page() {
               rgba(59, 130, 246, 0.14),
               transparent 60%
             );
-          filter: blur(28px);
-          animation: hnAurora 7.5s ease-in-out infinite alternate;
+          filter: blur(34px);
+          opacity: 0.55;
+          animation: hnAurora 8.5s ease-in-out infinite alternate;
         }
 
         .hn-ritual-sheen {
           background: linear-gradient(
             115deg,
             transparent 0%,
-            rgba(255, 255, 255, 0.1) 35%,
+            rgba(255, 255, 255, 0.06) 35%,
             transparent 70%
           );
           filter: blur(10px);
@@ -847,8 +1001,9 @@ export default function Page() {
               transparent 62%
             );
           mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 70%);
-          animation: hnSigil 5.5s ease-in-out infinite alternate;
-          filter: blur(0.2px);
+          animation: hnSigil 6.5s ease-in-out infinite alternate;
+          filter: blur(0.6px);
+          opacity: 0.45;
         }
 
         @keyframes hnAurora {
@@ -866,7 +1021,7 @@ export default function Page() {
             transform: translateX(-25%) rotate(2deg);
           }
           50% {
-            opacity: 0.45;
+            opacity: 0.32;
             transform: translateX(0%) rotate(2deg);
           }
           100% {
