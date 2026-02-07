@@ -105,14 +105,30 @@ function stepThumbAlt(step: string) {
   }
 }
 
-/** スクロールで“ふわっ”と出す（追加ライブラリ不要） */
+/** スクロールで“ふわっ”と出す（追加ライブラリ不要）
+ *  本番で IntersectionObserver が発火しない場合でも「消えっぱなし」にならないよう保険を入れる
+ */
 function useRevealOnView<T extends HTMLElement>(opts?: IntersectionObserverInit) {
   const ref = useRef<T | null>(null);
-  const [shown, setShown] = useState(false);
+
+  // IntersectionObserver が無い/不安定な環境では「隠さない」= 最初から表示
+  const [shown, setShown] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    return !("IntersectionObserver" in window);
+  });
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    // IO非対応なら即表示
+    if (!("IntersectionObserver" in window)) {
+      setShown(true);
+      return;
+    }
+
+    // 保険：IOが発火しなくても一定時間で表示（本番事故対策）
+    const safety = window.setTimeout(() => setShown(true), 900);
 
     const io = new IntersectionObserver(
       (entries) => {
@@ -128,7 +144,11 @@ function useRevealOnView<T extends HTMLElement>(opts?: IntersectionObserverInit)
     );
 
     io.observe(el);
-    return () => io.disconnect();
+
+    return () => {
+      window.clearTimeout(safety);
+      io.disconnect();
+    };
   }, [opts]);
 
   return { ref, shown };

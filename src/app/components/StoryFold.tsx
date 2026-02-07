@@ -8,14 +8,38 @@ function useRevealOnView<T extends HTMLElement>(opts?: IntersectionObserverInit)
   const [shown, setShown] = useState(false);
 
   useEffect(() => {
+    // ✅ Safety: If ref is not ready or IO is unavailable, never keep content hidden.
     const el = ref.current;
-    if (!el) return;
+    if (!el) {
+      setShown(true);
+      return;
+    }
+
+    // Some environments (or aggressive blockers) may not support IntersectionObserver.
+    if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
+      setShown(true);
+      return;
+    }
+
+    let timeoutId: number | null = null;
+    let revealed = false;
+
+    const reveal = () => {
+      if (revealed) return;
+      revealed = true;
+      setShown(true);
+    };
+
+    // ✅ Failsafe: if observer never fires, reveal after a short delay.
+    timeoutId = window.setTimeout(() => {
+      reveal();
+    }, 900);
 
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
           if (e.isIntersecting) {
-            setShown(true);
+            reveal();
             io.disconnect();
             break;
           }
@@ -25,7 +49,11 @@ function useRevealOnView<T extends HTMLElement>(opts?: IntersectionObserverInit)
     );
 
     io.observe(el);
-    return () => io.disconnect();
+
+    return () => {
+      io.disconnect();
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
   }, [opts]);
 
   return { ref, shown };
