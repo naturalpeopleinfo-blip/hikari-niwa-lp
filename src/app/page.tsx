@@ -8,6 +8,10 @@ type Progress = {
   goal: number;
   current: number;
   backers: number;
+  /** 募集終了日（JST想定） */
+  endAt: string; // YYYY-MM-DD
+  /** 24時間以内の支援者数（任意・取得できない場合は未表示） */
+  backersLast24h?: number;
 };
 
 type ReturnTone = "LIGHT" | "MID" | "DEEP" | "KEKKAI";
@@ -19,6 +23,7 @@ type ReturnItem = {
   ctaLabel: string;
   title: string;
   subtitle?: string;
+  checkoutUrl?: string;
 
   // UI用：コンテンツ名+説明（箇条書きの代替）
   grants: { name: string; desc: string }[];
@@ -212,9 +217,28 @@ export default function Page() {
     goal: 3_800_000,
     current: 1_420_000,
     backers: 23,
+    endAt: "2026-03-15",
+    // backersLast24h: 62,
   };
 
   const pct = clampPct((progress.current / progress.goal) * 100);
+
+  const remainingDays = useMemo(() => {
+    // JSTで日付を扱う（時差で1日ズレる事故を避ける）
+    const end = new Date(`${progress.endAt}T23:59:59+09:00`);
+    const now = new Date();
+    const diff = end.getTime() - now.getTime();
+    const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+    return Math.max(0, days);
+  }, [progress.endAt]);
+
+  const endAtLabel = useMemo(() => {
+    const d = new Date(`${progress.endAt}T00:00:00+09:00`);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}/${m}/${day}`;
+  }, [progress.endAt]);
 
   const returns: ReturnItem[] = useMemo(
     () => [
@@ -225,6 +249,7 @@ export default function Page() {
         ctaLabel: "想いを送る",
         title: "感謝の言霊メッセージ",
         subtitle: "今は遠くからでも、この渦にエネルギーを添えたいあなたへ。",
+        checkoutUrl: "https://buy.stripe.com/cNi3cu3Ii4eqbdBbQD5gc0c",
         grants: [
           {
             name: "付与するもの 01｜感謝の言霊",
@@ -244,6 +269,7 @@ export default function Page() {
         ctaLabel: "名前を刻む",
         title: "【刻印】サロン内プレート & 開門神事参加",
         subtitle: "この城に「自分も関わった」という証を残したい人へ。",
+        checkoutUrl: "https://buy.stripe.com/8x25kC3Ii26i95tcUH5gc0b",
         grants: [
           {
             name: "付与するもの 01｜刻印",
@@ -263,6 +289,7 @@ export default function Page() {
         ctaLabel: "一緒に作る",
         title: "【共創】光庭DIY参加 & 直会",
         subtitle: "使う前に、まず一緒に作る。",
+        checkoutUrl: "https://buy.stripe.com/7sYcN46UuaCOa9x6wj5gc0a",
         grants: [
           {
             name: "付与するもの 01｜共創参加",
@@ -289,6 +316,7 @@ export default function Page() {
         ctaLabel: "結界側へ入る",
         title: "【鍵石】スマート・タリスマン プレミアム",
         subtitle: "利用者ではなく、この場を共に整え、守り、育てていく人へ。",
+        checkoutUrl: "https://buy.stripe.com/cNi9ASfr0eT4bdB6wj5gc07",
         grants: [
           {
             name: "付与するもの 01｜鍵石（オーダーメイド）",
@@ -335,6 +363,7 @@ export default function Page() {
         ctaLabel: "最初の証人になる",
         title: "こけら落とし特別枠（結界庭守＋個人セッション）",
         subtitle: "結界側に入ったうえで、最初に深く“通過する”証へ。",
+        checkoutUrl: "https://buy.stripe.com/aFa5kC2Ee3am2H53k75gc08",
         grants: [
           {
             name: "付与するもの 01｜結界庭守（STEP3）フルセット",
@@ -363,6 +392,7 @@ export default function Page() {
         ctaLabel: "維持位として参画する",
         title: "維持位（場を倒さない人）｜貸切 & 直会",
         subtitle: "前に立たず、名を主張せず、それでもこの結界が続く理由になる人へ。",
+        checkoutUrl: "https://buy.stripe.com/aFaeVc92C9yKbdB7An5gc09",
         grants: [
           {
             name: "付与するもの 01｜光庭の貸切利用",
@@ -483,17 +513,19 @@ export default function Page() {
           <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h2 className="text-lg font-semibold">進捗</h2>
+                <h2 className="text-lg font-semibold">現在の支援総額</h2>
                 <p className="mt-1 text-sm text-zinc-600">
                   招待制・少人数のため、数字は“透明性”として提示します（仮データ）。
                 </p>
               </div>
-              <div className="text-xs text-zinc-500">最終更新：2026/02/05（仮）</div>
+              <div className="text-xs text-zinc-500">
+                募集終了：{endAtLabel}（JST）
+              </div>
             </div>
 
             <div className="mt-6 grid gap-3 sm:grid-cols-3">
               <div className="rounded-2xl bg-zinc-50 px-5 py-4">
-                <div className="text-xs font-semibold text-zinc-500">現在</div>
+                <div className="text-xs font-semibold text-zinc-500">現在の支援総額</div>
                 <div className="mt-1 text-xl font-semibold text-zinc-900">
                   ¥{yen(progress.current)}
                 </div>
@@ -503,11 +535,16 @@ export default function Page() {
                 <div className="mt-1 text-xl font-semibold text-zinc-900">
                   {progress.backers}人
                 </div>
+                {typeof progress.backersLast24h === "number" && (
+                  <div className="mt-1 text-xs text-zinc-500">
+                    24時間以内に{progress.backersLast24h}人からの支援がありました
+                  </div>
+                )}
               </div>
               <div className="rounded-2xl bg-zinc-50 px-5 py-4">
-                <div className="text-xs font-semibold text-zinc-500">達成率</div>
+                <div className="text-xs font-semibold text-zinc-500">募集終了まで残り</div>
                 <div className="mt-1 text-xl font-semibold text-zinc-900">
-                  {pct.toFixed(1)}%
+                  {remainingDays}日
                 </div>
               </div>
             </div>
@@ -530,7 +567,7 @@ export default function Page() {
 
               <div className="mt-4 h-3 overflow-hidden rounded-full bg-zinc-100">
                 <div
-                  className="h-full rounded-full bg-zinc-900 transition-[width]"
+                  className="h-full rounded-full bg-gradient-to-r from-orange-400 via-orange-500 to-rose-500 transition-[width]"
                   style={{ width: `${pct}%` }}
                   aria-label="progress bar"
                 />
@@ -539,6 +576,9 @@ export default function Page() {
               <div className="mt-3 flex items-center justify-between text-xs text-zinc-500">
                 <span>0%</span>
                 <span>100%</span>
+              </div>
+              <div className="mt-3 text-xs text-zinc-500">
+                募集終了まで残り <span className="font-semibold text-zinc-900">{remainingDays}日</span>
               </div>
             </div>
           </div>
@@ -779,8 +819,11 @@ export default function Page() {
                             </div>
                           )}
 
-                          <button
-                            type="button"
+                          <a
+                            href={r.checkoutUrl || "#"}
+                            target={r.checkoutUrl ? "_blank" : undefined}
+                            rel={r.checkoutUrl ? "noopener noreferrer" : undefined}
+                            aria-disabled={!r.checkoutUrl}
                             className={[
                               "inline-flex items-center gap-2 whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-medium transition",
                               "focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60",
@@ -788,13 +831,14 @@ export default function Page() {
                                 ? "hn-ritual-btn bg-white text-zinc-950 hover:bg-zinc-100"
                                 : "bg-zinc-900 text-white hover:bg-zinc-800",
                               isStep3 ? "hn-ritual-cta" : "",
+                              !r.checkoutUrl ? "pointer-events-none opacity-50" : "",
                             ].join(" ")}
                           >
                             <span aria-hidden className="shrink-0 text-[12px] leading-none opacity-90">
                               ▶
                             </span>
                             <span className="leading-none">{r.ctaLabel}</span>
-                          </button>
+                          </a>
                         </div>
                       </div>
 
@@ -859,7 +903,7 @@ export default function Page() {
                             </div>
 
                             <a
-                              href="https://buy.stripe.com/cNi9ASfr0eT4bdB6wj5gc07"
+                              href={r.checkoutUrl || "https://buy.stripe.com/cNi9ASfr0eT4bdB6wj5gc07"}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="hn-ritual-btn inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-medium text-zinc-950 hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60"
@@ -888,16 +932,18 @@ export default function Page() {
       {/* Join the vortex (image band) */}
       <section className="bg-zinc-50">
         <div className="mx-auto max-w-6xl px-4">
-          <div className="overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm">
-          
-            <div className="relative w-full">
-              <Image
-                src="/images/message.jpg"
-                alt="この渦に参加する"
-                width={2400}
-                height={1350}
-                className="h-auto w-full object-cover"
-              />
+          <div className="rounded-3xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-6">
+            <div className="mx-auto max-w-4xl">
+              <div className="relative overflow-hidden rounded-2xl border border-zinc-200 bg-white">
+                <Image
+                  src="/images/message.jpg"
+                  alt="植草智史 メッセージ"
+                  width={2400}
+                  height={1350}
+                  className="h-auto w-full object-contain"
+                  sizes="(min-width: 1024px) 896px, (min-width: 640px) 80vw, 92vw"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -907,7 +953,7 @@ export default function Page() {
 
       <footer className="border-t border-zinc-200 bg-white">
         <div className="mx-auto max-w-6xl px-4 py-10 text-xs text-zinc-500">
-          © HikariNiwa (mock). Numbers are placeholder.
+          © {new Date().getFullYear()} HikariNiwa. All rights reserved.
         </div>
       </footer>
 
