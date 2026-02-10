@@ -702,7 +702,6 @@ export default function Page() {
                     </p>
                   </div>
 
-                  <div className="text-sm text-zinc-500">※ 価格・内容は微調整OK</div>
                 </div>
               </div>
             </div>
