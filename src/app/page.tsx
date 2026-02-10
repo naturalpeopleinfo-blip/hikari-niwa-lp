@@ -485,7 +485,7 @@ export default function Page() {
   </p>
 
   <p className="text-lg sm:text-xl font-medium">
-    そんな完全会員制のプライベートスペースです。
+    そんな完全会員制のプライベートサロンです。
   </p>
 </div>
 
@@ -514,9 +514,6 @@ export default function Page() {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <h2 className="text-lg font-semibold">現在の支援総額</h2>
-                <p className="mt-1 text-sm text-zinc-600">
-                  招待制・少人数のため、数字は“透明性”として提示します（仮データ）。
-                </p>
               </div>
               <div className="text-xs text-zinc-500">
                 募集終了：{endAtLabel}（JST）
